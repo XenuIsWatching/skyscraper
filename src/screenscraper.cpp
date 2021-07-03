@@ -726,6 +726,8 @@ QString ScreenScraper::getPlatformId(const QString platform)
     return "113";
   } else if(platform == "n64") {
     return "14";
+  } else if(platform == "n64dd") {
+    return "122";
   } else if(platform == "naomi") {
     return "75";
   } else if(platform == "nds") {
@@ -780,6 +782,8 @@ QString ScreenScraper::getPlatformId(const QString platform)
     return "4";
   } else if(platform == "switch") {
     return "225";
+  } else if(platform == "supergrafx") {
+    return "105";
   } else if(platform == "ti99") {
     return "205";
   } else if(platform == "trs-80") {
