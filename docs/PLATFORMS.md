@@ -43,6 +43,7 @@ As Skyscraper was built to be used with RetroPie, the list of supported platform
 * NeoGeo Pocket
 * NeoGeo Pocket Color
 * Nintendo 64
+* Nintendo 64DD
 * Nintendo DS
 * Nintendo Entertainment System
 * Oric (Oric-1, Oric Atmos)
@@ -51,6 +52,7 @@ As Skyscraper was built to be used with RetroPie, the list of supported platform
 * PC-9800
 * PC-Engine / TurboGrafx-16
 * PC-Engine CD / TurboGrafx-16 CD
+* PC Engine SuperGrafx
 * PC-FX
 * Playstation
 * Playstation 2

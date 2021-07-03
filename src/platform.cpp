@@ -87,6 +87,7 @@ QStringList Platform::getPlatforms()
   platforms.append("msx");
   platforms.append("msx2");
   platforms.append("n64");
+  platforms.append("n64dd");
   platforms.append("naomi");
   platforms.append("nds");
   platforms.append("neogeo");
@@ -114,6 +115,7 @@ QStringList Platform::getPlatforms()
   platforms.append("sg-1000");
   platforms.append("snes");
   platforms.append("steam");
+  platforms.append("supergrafx");
   platforms.append("ti99");
   platforms.append("trs-80");
   platforms.append("vectrex");
@@ -235,6 +237,8 @@ QStringList Platform::getScrapers(QString platform)
     scrapers.append("screenscraper");
   } else if(platform == "n64") {
     scrapers.append("screenscraper");
+  } else if(platform == "n64dd") {
+    scrapers.append("screenscraper");
   } else if(platform == "naomi") {
     scrapers.append("screenscraper");
   } else if(platform == "nds") {
@@ -292,6 +296,8 @@ QStringList Platform::getScrapers(QString platform)
   } else if(platform == "snes") {
     scrapers.append("screenscraper");
   } else if(platform == "steam") {
+    scrapers.append("screenscraper");
+  } else if(platform == "supergrafx") {
     scrapers.append("screenscraper");
   } else if(platform == "ti99") {
     scrapers.append("screenscraper");
@@ -439,6 +445,8 @@ QString Platform::getFormats(QString platform, QString extensions, QString addEx
     formats.append("*.rom *.mx1 *.mx2 *.col *.dsk");
   } else if(platform == "n64") {
     formats.append("*.z64 *.n64 *.v64");
+  } else if(platform == "n64dd") {
+    formats.append("*.ndd");
   } else if(platform == "naomi") {
     formats.append("*.bin *.dat");
   } else if(platform == "nds") {
@@ -491,6 +499,8 @@ QString Platform::getFormats(QString platform, QString extensions, QString addEx
     formats.append("*.bin *.sg");
   } else if(platform == "snes") {
     formats.append("*.smc *.sfc *.fig *.swc *.mgd *.bin");
+  } else if(platform == "supergrafx") {
+    formats.append("*.pce *.zip");
   } else if(platform == "ti99") {
     formats.append("*.ctg");
   } else if(platform == "trs-80") {
@@ -621,6 +631,8 @@ QString Platform::getDefaultScraper(QString platform)
     scraper = "cache";
   } else if(platform == "n64") {
     scraper = "cache";
+  } else if(platform == "n64dd") {
+    scraper = "cache";
   } else if(platform == "naomi") {
     scraper = "cache";
   } else if(platform == "nds") {
@@ -674,6 +686,8 @@ QString Platform::getDefaultScraper(QString platform)
   } else if(platform == "snes") {
     scraper = "cache";
   } else if(platform == "steam") {
+    scraper = "cache";
+  } else if(platform == "supergrafx") {
     scraper = "cache";
   } else if(platform == "ti99") {
     scraper = "cache";
@@ -1249,6 +1263,8 @@ QStringList Platform::getAliases(QString platform)
     aliases.append("msx r turbo");
   } else if(platform == "n64") {
     aliases.append("nintendo 64");
+  } else if(platform == "n64dd") {
+    aliases.append("nintendo 64dd");
   } else if(platform == "naomi") {
     aliases.append("neo geo");
     aliases.append("neo-geo");
@@ -1442,6 +1458,9 @@ QStringList Platform::getAliases(QString platform)
     // Adding these consoles because 'thegamesdb' often only return these instead of PC versions
     aliases.append("microsoft xbox one");
     aliases.append("sony playstation 4");
+  } else if(platform == "supergrafx") {
+    aliases.append("pc engine supergrafx");
+    aliases.append("supergrafx");
   } else if(platform == "ti99") {
     aliases.append("ti-99/4a");
     aliases.append("texas instruments ti-99");
