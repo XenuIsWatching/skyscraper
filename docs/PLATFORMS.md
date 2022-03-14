@@ -56,6 +56,7 @@ As Skyscraper was built to be used with RetroPie, the list of supported platform
 * PC-Engine CD / TurboGrafx-16 CD
 * PC Engine SuperGrafx
 * PC-FX
+* Phillips CD-i
 * Playstation
 * Playstation 2
 * Playstation Portable
