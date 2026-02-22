@@ -104,6 +104,7 @@ HEADERS += src/skyscraper.h \
            src/abstractscraper.h \
            src/abstractfrontend.h \
            src/emulationstation.h \
+           src/emulationstation2.h \
            src/esde.h \
            src/batocera.h \
            src/attractmode.h \
@@ -158,6 +159,7 @@ SOURCES += src/main.cpp \
            src/abstractscraper.cpp \
            src/abstractfrontend.cpp \
            src/emulationstation.cpp \
+           src/emulationstation2.cpp \
            src/esde.cpp \
            src/batocera.cpp \
            src/attractmode.cpp \

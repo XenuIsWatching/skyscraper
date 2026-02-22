@@ -6,7 +6,7 @@ When generating a game list with Skyscraper you have the option of generating it
 
     Skyscraper will overwrite your game list (obviously). So if you have spend a lot of time hand-crafting metadata in a game list for any frontend, please remember to create a backup before overwriting it with Skyscraper. You can also tell Skyscraper to auto-backup old game lists prior to overwriting them. Read more about the [`gameListBackup` config option](CONFIGINI.md#gamelistbackup).
 
-Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [in the commandline documentation](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [config file documentation](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
+Setting a frontend when generating a game list is done by setting the `-f <FRONTEND>` command-line parameter as explained [in the commandline documentation](CLIHELP.md#-f-frontend) or by setting it in `/home/<USER>/.skyscraper/config.ini` as explained [config file documentation](CONFIGINI.md#frontend). Use for the `<FRONTEND>` value the frontend name all lowercase and with alphabetical characters only: `emulationstation`, `emulationstation2`, `esde`, `pegasus`, `retrobat`, `attractmode`. Some frontends have further options that are either optional or required. Check the frontend sections below for more information on this.
 
 When generating a game list for any frontend, Skyscraper will try to preserve certain metadata. Check the frontend sections below for more information on what metadata is preserved per frontend.
 
@@ -63,6 +63,32 @@ If at least one ROM is within a subfolder and this subfolder is not yet part of 
     [...]
     ```
     The `Retail` folder is added even if it does not contain a ROM because it is part of the path to the ROMs in the lowest folders.
+
+### EmulationStation2
+
+-   Frontend name: `emulationstation2`
+-   Default game list location: `/home/<USER>/RetroPie/roms/<PLATFORM>`
+-   Default game list filename: `gamelist.xml`
+
+This frontend writes a hierarchical EmulationStation-style gamelist with one
+canonical `<game>` node and nested `<roms>/<rom>` entries for all matched
+variants.
+
+At game level, common metadata is written once (title, description,
+developer/publisher, genre, players, rating, kidgame, shared media and common
+stats).
+
+At rom level, variant-specific metadata is written per `<rom>`, including at
+least `<path>`, and optional values such as `romname`, `releasedate`,
+`revision`, `regions`, `languages` and media overrides.
+
+#### Notes and limitations
+
+- The `preferred` attribute on each `<rom>` is always emitted as lowercase
+    strict booleans (`true` / `false`).
+- Region and language values are exported as vectors (`<regions><region>...</region></regions>` and `<languages><language>...</language></languages>`), not CSV strings.
+- ROM-level metadata is currently populated from the ScreenScraper module.
+    Other scrapers still generate valid output, but may only contain shared data.
 
 ### EmulationStation Desktop Edition (ES-DE)
 

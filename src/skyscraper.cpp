@@ -32,6 +32,7 @@
 #include "compositor.h"
 #include "config.h"
 #include "emulationstation.h"
+#include "emulationstation2.h"
 #include "esde.h"
 #include "pegasus.h"
 #include "settings.h"
@@ -940,6 +941,8 @@ void Skyscraper::loadConfig(const QCommandLineParser &parser) {
     if (config.frontend == "emulationstation" ||
         config.frontend == "retrobat") {
         frontend = QSharedPointer<AbstractFrontend>(new EmulationStation());
+    } else if (config.frontend == "emulationstation2") {
+        frontend = QSharedPointer<AbstractFrontend>(new EmulationStation2());
     } else if (config.frontend == "attractmode") {
         frontend = QSharedPointer<AbstractFrontend>(new AttractMode());
     } else if (config.frontend == "pegasus") {

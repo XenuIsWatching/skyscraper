@@ -435,7 +435,7 @@ If exporting for the `attractmode` frontend, please also take note of the requir
 
 If exporting for the `pegasus` frontend, please also take note of the optional `launch=""` option that allows you to set the launch parameter used by Pegasus.
 
-Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `esde`, `pegasus`, `retrobat`, `attractmode`, aso. Check all supported frontends with '--help' and read a more about the [details concerning each of them](FRONTENDS.md).
+Use as value for the frontend option the frontend name in all lowercase and with alphabetical characters only: `emulationstation`, `emulationstation2`, `esde`, `pegasus`, `retrobat`, `attractmode`, `batocera`, aso. Check all supported frontends with '--help' and read a more about the [details concerning each of them](FRONTENDS.md).
 
 Default value: `emulationstation`  
 Allowed in sections: `[main]`

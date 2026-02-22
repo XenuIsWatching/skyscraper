@@ -33,6 +33,7 @@
 #include <QMap>
 #include <QPair>
 #include <QString>
+#include <QStringList>
 
 class GameEntry {
 public:
@@ -138,6 +139,16 @@ public:
     QString agesSrc = "";
     QString rating = "";
     QString ratingSrc = "";
+
+    // optional canonical/ROM-level metadata (currently populated by
+    // screenscraper and used by emulationstation2 frontend)
+    QString canonicalId = "";
+    QString romChecksum = "";
+    QString romName = "";
+    QString romReleaseDate = "";
+    QString romRevision = "";
+    QStringList romRegions;
+    QStringList romLanguages;
 
     // binary data
     QByteArray coverData = QByteArray();

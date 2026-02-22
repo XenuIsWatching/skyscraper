@@ -5,6 +5,10 @@ humans](https://keepachangelog.com).
 
 ### Version 3.19.0 (2026-TBA)
 
+- Added: New frontend `emulationstation2` with hierarchical gamelist output
+  (canonical `<game>` with nested `<roms>/<rom>` variants).
+- Added: ScreenScraper ROM-level extraction for `emulationstation2`, including
+  checksum-based ROM matching and vector export of ROM regions/languages.
 - Updated: ZXInfo scraper now checks first for file hash match, allow overriding
   with query parameter or hinting with release year in parenthesis in filename or
   via `aliasMap.csv` (since 3.18.2)

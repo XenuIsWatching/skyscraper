@@ -1722,7 +1722,14 @@ void Cache::addResources(GameEntry &entry, const Settings &config,
         {"ages", entry.ages},
         {"tags", entry.tags},
         {"rating", entry.rating},
-        {"releasedate", entry.releaseDate}};
+        {"releasedate", entry.releaseDate},
+        {"canonicalid", entry.canonicalId},
+        {"romchecksum", entry.romChecksum},
+        {"romname", entry.romName},
+        {"romreleasedate", entry.romReleaseDate},
+        {"romrevision", entry.romRevision},
+        {"romregions", entry.romRegions.join("|")},
+        {"romlanguages", entry.romLanguages.join("|")}};
 
     for (auto e = txtResources.cbegin(), end = txtResources.cend(); e != end;
          ++e) {
@@ -2149,6 +2156,33 @@ void Cache::fillBlanks(GameEntry &entry, const QString scraper) {
             // PENDING: if thumbnail is ever used, add it here like video/manual
         }
     }
+
+    const QList<QString> romMetaTypes = {"canonicalid",  "romchecksum",
+                                         "romname",      "romreleasedate",
+                                         "romrevision",  "romregions",
+                                         "romlanguages"};
+    for (const auto &type : romMetaTypes) {
+        QString result;
+        QString source;
+        if (!fillType(type, matchingResources, result, source)) {
+            continue;
+        }
+        if (type == "canonicalid") {
+            entry.canonicalId = result;
+        } else if (type == "romchecksum") {
+            entry.romChecksum = result;
+        } else if (type == "romname") {
+            entry.romName = result;
+        } else if (type == "romreleasedate") {
+            entry.romReleaseDate = result;
+        } else if (type == "romrevision") {
+            entry.romRevision = result;
+        } else if (type == "romregions") {
+            entry.romRegions = result.split("|", Qt::SkipEmptyParts);
+        } else if (type == "romlanguages") {
+            entry.romLanguages = result.split("|", Qt::SkipEmptyParts);
+        }
+    }
 }
 
 bool Cache::fillType(const QString &type, QList<Resource> &matchingResources,
@@ -2172,6 +2206,7 @@ bool Cache::fillType(const QString &type, QList<Resource> &matchingResources,
                 }
             }
         }
+
     }
     qint64 newest = 0;
     for (const auto &resource : typeResources) {

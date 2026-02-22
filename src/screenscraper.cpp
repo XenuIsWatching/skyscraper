@@ -35,6 +35,7 @@
 #include <QJsonDocument>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QSet>
 
 constexpr int RETRIESMAX = 3;
 constexpr int TIMEOUT_SEC = 75;
@@ -85,6 +86,8 @@ ScreenScraper::ScreenScraper(Settings *config,
 
 void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
                                      QString searchName, QString) {
+    queryData = parseQuery(searchName);
+
     // ignore any | entries, only pick first
     int platformId = getPlatformId(config->platform)[0];
     if (platformId == -1) {
@@ -299,8 +302,42 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
 
     game.url = gameUrl;
+    game.canonicalId = jsonObj["id"].toVariant().toString();
     game.platform = jsonObj["systeme"].toObject()["text"].toString();
     game.releaseDate = getJsonText(jsonObj["dates"].toArray(), REGION);
+
+    QJsonObject romObj = findMatchedRom(jsonObj, queryData);
+    game.romName = romField(romObj, "romfilename");
+    game.romChecksum = queryData.value("sha1");
+    if (game.romChecksum.isEmpty()) {
+        game.romChecksum = queryData.value("md5");
+    }
+    if (game.romChecksum.isEmpty()) {
+        game.romChecksum = queryData.value("crc");
+    }
+
+    QString romDate = getJsonText(romObj["dates"].toArray(), REGION);
+    if (romDate.isEmpty()) {
+        romDate = romField(romObj, "releasedate");
+    }
+    game.romReleaseDate = romDate;
+
+    QString revision = romField(romObj, "revision");
+    if (revision.isEmpty()) {
+        revision = romField(romObj, "version");
+    }
+    game.romRevision = revision;
+
+    game.romRegions = valuesFromArray(
+        romObj["regions"].toArray(), {"text", "nomcourt", "region"});
+    if (game.romRegions.isEmpty()) {
+        game.romRegions = valuesFromArray(jsonObj["regionshortnames"].toArray(),
+                                          {"text", "nomcourt", "region"});
+    }
+
+    game.romLanguages =
+        valuesFromArray(romObj["langues"].toArray(),
+                        {"text", "nomcourt", "langue", "lang"});
 
     // Only check if platform is empty, it's always correct when using
     // ScreenScraper
@@ -746,4 +783,92 @@ QString ScreenScraper::getJsonText(QJsonArray jsonArr, int attr,
 
 QVector<int> ScreenScraper::getPlatformId(const QString platform) {
     return Platform::get().getPlatformIdOnScraper(platform, config->scraper);
+}
+
+QMap<QString, QString> ScreenScraper::parseQuery(const QString &query) {
+    QMap<QString, QString> out;
+    const QStringList pairs = query.split('&', Qt::SkipEmptyParts);
+    for (const auto &pair : pairs) {
+        QStringList kv = pair.split('=', Qt::KeepEmptyParts);
+        if (kv.length() < 2) {
+            continue;
+        }
+        QString key = kv.takeFirst().trimmed().toLower();
+        QString value = kv.join("=").trimmed();
+        if (!key.isEmpty() && !value.isEmpty()) {
+            out.insert(key, QUrl::fromPercentEncoding(value.toUtf8()));
+        }
+    }
+    return out;
+}
+
+QStringList ScreenScraper::valuesFromArray(const QJsonArray &arr,
+                                           const QStringList &preferredKeys) {
+    QStringList out;
+    for (const auto &v : arr) {
+        if (v.isString()) {
+            out.append(v.toString().trimmed());
+            continue;
+        }
+        if (!v.isObject()) {
+            continue;
+        }
+        QJsonObject obj = v.toObject();
+        for (const auto &key : preferredKeys) {
+            if (obj[key].isString()) {
+                const QString value = obj[key].toString().trimmed();
+                if (!value.isEmpty()) {
+                    out.append(value);
+                    break;
+                }
+            }
+        }
+    }
+    out.removeAll("");
+    out.removeDuplicates();
+    return out;
+}
+
+QJsonObject ScreenScraper::findMatchedRom(const QJsonObject &gameObj,
+                                          const QMap<QString, QString> &qData) {
+    if (gameObj["rom"].isObject()) {
+        return gameObj["rom"].toObject();
+    }
+
+    if (!gameObj["roms"].isArray()) {
+        return QJsonObject();
+    }
+
+    QString crc = qData.value("crc").toUpper();
+    QString md5 = qData.value("md5").toUpper();
+    QString sha1 = qData.value("sha1").toUpper();
+
+    QJsonObject first;
+    QJsonArray arr = gameObj["roms"].toArray();
+    for (const auto &rv : arr) {
+        if (!rv.isObject()) {
+            continue;
+        }
+        QJsonObject rom = rv.toObject();
+        if (first.isEmpty()) {
+            first = rom;
+        }
+        const QString romCrc = rom["romcrc"].toString().toUpper();
+        const QString romMd5 = rom["rommd5"].toString().toUpper();
+        const QString romSha1 = rom["romsha1"].toString().toUpper();
+        if ((!sha1.isEmpty() && sha1 == romSha1) ||
+            (!md5.isEmpty() && md5 == romMd5) ||
+            (!crc.isEmpty() && crc == romCrc)) {
+            return rom;
+        }
+    }
+    return first;
+}
+
+QString ScreenScraper::romField(const QJsonObject &romObj,
+                                const QString &name) {
+    if (!romObj[name].isString()) {
+        return "";
+    }
+    return romObj[name].toString().trimmed();
 }

@@ -30,6 +30,7 @@
 
 #include <QEventLoop>
 #include <QJsonObject>
+#include <QJsonValue>
 #include <QTimer>
 
 constexpr int REGION = 0;
@@ -87,11 +88,18 @@ private:
     QString getPropertyValue(const QJsonArray &jsonArr,
                              const QList<QString> &locPrios,
                              const QString &locationKey, const QString &type);
+    QMap<QString, QString> parseQuery(const QString &query);
+    QStringList valuesFromArray(const QJsonArray &arr,
+                                const QStringList &preferredKeys);
+    QJsonObject findMatchedRom(const QJsonObject &gameObj,
+                               const QMap<QString, QString> &queryData);
+    QString romField(const QJsonObject &romObj, const QString &name);
     QVector<int> getPlatformId(const QString platform) override;
 
     QString region;
     QString lang;
     QJsonObject jsonObj;
+    QMap<QString, QString> queryData;
     int timeout;
     int tctr = 0;
 };

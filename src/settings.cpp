@@ -406,7 +406,9 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "addFolders") {
-                QStringList allowedFe({"emulationstation", "esde", "retrobat"});
+                QStringList allowedFe(
+                    {"emulationstation", "emulationstation2", "esde",
+                     "retrobat"});
                 if (allowedFe.contains(config->frontend)) {
                     config->addFolders = v;
                 } else {
@@ -442,7 +444,8 @@ void RuntimeCfg::applyConfigIni(CfgType type, QSettings *settings,
                 continue;
             }
             if (k == "mediaFolderHidden") {
-                QStringList allowedFe({"emulationstation", "retrobat"});
+                QStringList allowedFe(
+                    {"emulationstation", "emulationstation2", "retrobat"});
                 if (allowedFe.contains(config->frontend)) {
                     config->mediaFolderHidden = v;
                 } else {
@@ -892,8 +895,10 @@ QStringList RuntimeCfg::parseFlags() {
 }
 
 bool RuntimeCfg::validateFrontend(const QString &providedFrontend) {
-    QStringList frontends = {"emulationstation", "retrobat", "attractmode",
-                             "pegasus",          "esde",     "batocera"};
+    QStringList frontends = {"emulationstation", "emulationstation2",
+                             "retrobat",         "attractmode",
+                             "pegasus",          "esde",
+                             "batocera"};
     frontends.sort();
     if (!frontends.contains(providedFrontend)) {
         printf("\033[1;31mBummer! Unknown frontend '%s'. Known frontends are: "
