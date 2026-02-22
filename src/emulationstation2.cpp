@@ -278,7 +278,11 @@ void EmulationStation2::assembleList(QString &finalOutput,
             const auto &rom = orderedGroup.at(i);
             const bool preferredRom = i == preferredOrderedIndex;
 
-            QString romName = rom.romName;
+            // Try to determine a rom name for ES. Preferably the actual file name, but fall back to other available info if not present.
+            QString romName = QFileInfo(rom.path).fileName();
+            if (romName.isEmpty()) {
+                romName = rom.romName;
+            }
             if (romName.isEmpty()) {
                 romName = rom.baseName;
             }
@@ -289,10 +293,10 @@ void EmulationStation2::assembleList(QString &finalOutput,
             QString romReleaseDate = releaseDateValue(
                 rom.romReleaseDate.isEmpty() ? rom.releaseDate : rom.romReleaseDate);
 
-            QString romImage = (rom.screenshotFile == image) ? "" : rom.screenshotFile;
-            QString romMarquee = (rom.marqueeFile == marquee) ? "" : rom.marqueeFile;
-            QString romVideo = (rom.videoFile == video) ? "" : rom.videoFile;
-            QString romThumbnail = (rom.coverFile == thumbnail) ? "" : rom.coverFile;
+            QString romImage = rom.screenshotFile;
+            QString romMarquee = rom.marqueeFile;
+            QString romVideo = rom.videoFile;
+            QString romThumbnail = rom.coverFile;
 
             lines.append(QString(INDENT % INDENT % INDENT %
                                  "<rom preferred=\"%1\">")
