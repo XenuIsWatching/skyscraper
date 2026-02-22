@@ -91,6 +91,8 @@ private:
     QMap<QString, QString> parseQuery(const QString &query);
     QStringList valuesFromArray(const QJsonArray &arr,
                                 const QStringList &preferredKeys);
+    QStringList valuesFromValue(const QJsonValue &value,
+                                const QStringList &preferredKeys);
     QJsonObject findMatchedRom(const QJsonObject &gameObj,
                                const QMap<QString, QString> &queryData);
     QString romField(const QJsonObject &romObj, const QString &name);

@@ -328,16 +328,25 @@ void ScreenScraper::getSearchResults(QList<GameEntry> &gameEntries,
     }
     game.romRevision = revision;
 
-    game.romRegions = valuesFromArray(
-        romObj["regions"].toArray(), {"text", "nomcourt", "region"});
+    game.romRegions = valuesFromValue(
+        romObj["regions"],
+        {"regions_shortname", "romregions", "nomcourt", "region", "text"});
     if (game.romRegions.isEmpty()) {
-        game.romRegions = valuesFromArray(jsonObj["regionshortnames"].toArray(),
-                                          {"text", "nomcourt", "region"});
+        game.romRegions = valuesFromValue(
+            jsonObj["regionshortnames"],
+            {"regions_shortname", "romregions", "nomcourt", "region", "text"});
     }
 
     game.romLanguages =
-        valuesFromArray(romObj["langues"].toArray(),
-                        {"text", "nomcourt", "langue", "lang"});
+        valuesFromValue(romObj["langues"],
+                        {"langues_shortname", "languages_shortname",
+                         "nomcourt", "langue", "lang", "text"});
+    if (game.romLanguages.isEmpty()) {
+        game.romLanguages = valuesFromValue(
+            jsonObj["langues"],
+            {"langues_shortname", "languages_shortname",
+             "nomcourt", "langue", "lang", "text"});
+    }
 
     // Only check if platform is empty, it's always correct when using
     // ScreenScraper
@@ -824,6 +833,48 @@ QStringList ScreenScraper::valuesFromArray(const QJsonArray &arr,
             }
         }
     }
+    out.removeAll("");
+    out.removeDuplicates();
+    return out;
+}
+
+QStringList ScreenScraper::valuesFromValue(const QJsonValue &value,
+                                           const QStringList &preferredKeys) {
+    QStringList out;
+    if (value.isArray()) {
+        return valuesFromArray(value.toArray(), preferredKeys);
+    }
+
+    if (value.isString()) {
+        const QString s = value.toString().trimmed();
+        if (!s.isEmpty()) {
+            out.append(s);
+        }
+        return out;
+    }
+
+    if (!value.isObject()) {
+        return out;
+    }
+
+    const QJsonObject obj = value.toObject();
+    for (const auto &key : preferredKeys) {
+        const QJsonValue field = obj[key];
+        if (field.isString()) {
+            const QString s = field.toString().trimmed();
+            if (!s.isEmpty()) {
+                out.append(s);
+            }
+        } else if (field.isArray()) {
+            const QStringList arrValues = valuesFromArray(field.toArray(), {"text"});
+            for (const auto &entry : arrValues) {
+                if (!entry.isEmpty()) {
+                    out.append(entry);
+                }
+            }
+        }
+    }
+
     out.removeAll("");
     out.removeDuplicates();
     return out;

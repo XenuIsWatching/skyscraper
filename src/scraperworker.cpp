@@ -473,6 +473,17 @@ void ScraperWorker::run() {
                       game.agesSrc + ")\n");
         output.append("Tags:           '\033[1;32m" + game.tags + "\033[0m' (" +
                       game.tagsSrc + ")\n");
+           const QString romMetaSrc = !game.tagsSrc.isEmpty() ? game.tagsSrc
+                                                    : game.source;
+        output.append("ROM Regions:    '\033[1;32m" +
+                      (game.romRegions.isEmpty() ? ""
+                                            : game.romRegions.join("|")) +
+                      "\033[0m' (" + romMetaSrc + ")\n");
+        output.append("ROM Languages:  '\033[1;32m" +
+                      (game.romLanguages.isEmpty()
+                          ? ""
+                          : game.romLanguages.join("|")) +
+                      "\033[0m' (" + romMetaSrc + ")\n");
         output.append("Rating (0-1):   '\033[1;32m" + game.rating +
                       "\033[0m' (" + game.ratingSrc + ")\n");
         output.append(
